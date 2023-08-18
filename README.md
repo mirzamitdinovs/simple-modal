@@ -14,25 +14,235 @@ pnpm dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+# A SAMPLE OF MY TECHNICAL WRITING
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+## Simple gitlab readme documentation i created for a microservice api
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+# Get School Course Users
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+Get users by the school course,
 
-## Learn More
+**URL** : `/function/api_url`
 
-To learn more about Next.js, take a look at the following resources:
+**Method** : `POST`
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+**Auth required** : FALSE
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+**Permissions required** : None
 
-## Deploy on Vercel
+**Data constraints**
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Required Field: Provide Course Id to get all users.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+```json
+{
+	"course_id": "number"
+}
+```
+
+Optional Field: Provide User Role.
+Accepted Values: `['professor', 'student']`
+
+```json
+{
+	"user_role": "string"
+}
+```
+
+Optional Field: Provide Username.
+`User id starting with 500`
+
+```json
+{
+	"username": "number"
+}
+```
+
+Optional Field: Provide User Email.
+
+```json
+{
+	"email": "string"
+}
+```
+
+Optional Field: Provide User ID.
+
+```json
+{
+	"id": "number"
+}
+```
+
+Optional Field: Provide User First Name.
+
+```json
+{
+	"first_name": "string"
+}
+```
+
+Optional Field: Provide User Last Name.
+
+```json
+{
+	"last_name": "string"
+}
+```
+
+Optional Field: Provide User Status. By defult it return active users
+Accepted Values: `1 - true, 0 - false`
+
+```json
+{
+	"active": "boolean"
+}
+```
+
+**Data example** Only course_id field is required.
+
+```json
+{
+	"course_id": 1,
+	"id": 1,
+	"username": 500101010,
+	"first_name": "Alani ",
+	"last_name": "Fowler",
+	"email": "johndoe@gmail.com",
+	"user_role": "professor",
+	"active": 1
+}
+```
+
+## Success Response
+
+**Code** : `200 OK`
+
+**Content examples**
+
+With the correct course_id, it returns an object where status is 200, message is success and response with the list of all users of the current course.
+
+```json
+[
+	{
+		"id": 1,
+		"username": 500101010,
+		"first_name": "Alani ",
+		"last_name": "Fowler",
+		"email": "johndoe@gmail.com",
+		"user_role": "professor",
+		"active": 1,
+		"time_created": "2022-01-06T01:35:22.000Z",
+		"time_updated": "2022-01-06T01:35:22.000Z",
+		"user_settings_json": {},
+		"services": [
+			{
+				"id": 1,
+				"service_id": "portal",
+				"name": ""
+			},
+			{
+				"id": 2,
+				"service_id": "gitlab",
+				"name": ""
+			},
+			{
+				"id": 3,
+				"service_id": "vscode",
+				"name": ""
+			}
+		]
+	},
+	{
+		"id": 4,
+		"username": 500101014,
+		"first_name": "Alyssa",
+		"last_name": "Meyer",
+		"email": "a.meyer@gmail.com",
+		"user_role": "student",
+		"active": 1,
+		"time_created": "2022-01-06T01:35:22.000Z",
+		"time_updated": "2022-01-06T01:35:22.000Z",
+		"user_settings_json": {},
+		"services": [
+			{
+				"id": 2,
+				"service_id": "gitlab",
+				"name": ""
+			},
+			{
+				"id": 3,
+				"service_id": "vscode",
+				"name": ""
+			}
+		]
+	}
+]
+```
+
+Empty list will be returned if there is no users matched with the provided parameters.
+
+```json
+{
+	"status": 200,
+	"message": "success",
+	"response": []
+}
+```
+
+## Error Responses
+
+**Condition** : If `empty parameters` is provided.
+
+**Code** : `200`
+
+**Content** : `
+{
+  "status": 400,
+  "message": "No input detected!",
+  "response": []
+}`
+
+### Or
+
+**Condition** : If no `course_id` is provided.
+
+**Code** : `200`
+
+**Content** : `{
+  "status": 400,
+  "message": "Course Id required",
+  "response": []
+}`
+
+### Or
+
+**Condition** : If `invalid json` is sent as a parameter.
+
+**Code** : `200`
+
+**Content** : `{ status: 400, message: 'Incorrect JSON format', response: [] }`
+
+### Or
+
+**Condition** : If `invalid parameter` is sent.Example: `{"role":"teacher"}`
+
+**Code** : `200`
+
+**Content** : `{
+  "status": 400,
+  "message": "Can not accept role as a parameter",
+  "response": []
+}`
+
+### Or
+
+**Condition** : If an err is occured in the server, it either returns default `Internal server error` or specific error message.
+
+**Code** : `200`
+
+**Content** : `{
+  "status": 500,
+  "message": "Internal server error'",
+  "response": []
+}`
